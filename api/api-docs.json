@@ -1,0 +1,511 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Documentação da API para endpoints de autenticação e usuário",
+    "version": "1.0.0",
+    "title": "Auth & User API"
+  },
+  "tags": [
+    {
+      "name": "auth",
+      "description": "Endpoints de autenticação"
+    },
+    {
+      "name": "user",
+      "description": "Endpoints de usuário"
+    }
+  ],
+  "basePath": "/",
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "paths": {
+    "/auth/api": {
+      "post": {
+        "summary": "Autentica uma solicitação com uma chave de API",
+        "description": "Este endpoint autentica uma solicitação usando uma chave de API fornecida.",
+        "tags": ["auth"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Chave de API do usuário",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ApiKeyDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resposta de sucesso com token de acesso",
+            "schema": {
+              "$ref": "#/definitions/RetornoDto"
+            }
+          },
+          "403": {
+            "description": "Acesso não autorizado"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Faz login de um usuário",
+        "description": "Este endpoint realiza o login de um usuário usando suas credenciais.",
+        "tags": ["auth"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Credenciais do usuário",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resposta de sucesso com token de acesso e dados do usuário",
+            "schema": {
+              "$ref": "#/definitions/RetornoTokenDto"
+            }
+          },
+          "401": {
+            "description": "Usuário não encontrado ou credenciais inválidas"
+          }
+        }
+      }
+    },
+    "/auth/refresh-token": {
+      "post": {
+        "summary": "Atualiza um token de acesso",
+        "description": "Este endpoint atualiza um token de acesso expirado usando um token de atualização válido.",
+        "tags": ["auth"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Token de atualização",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TokenDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resposta de sucesso com novo token de acesso e token de atualização"
+          }
+        }
+      }
+    },
+    "/auth/validate-token": {
+      "post": {
+        "summary": "Valida um token",
+        "description": "Este endpoint valida a autenticidade de um token de acesso.",
+        "tags": ["auth"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Token a ser validado",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TokenDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resposta de sucesso"
+          },
+          "401": {
+            "description": "Erro de autenticação"
+          }
+        }
+      }
+    },
+    "/auth/delete-all-sessions": {
+      "delete": {
+        "summary": "Deleta todas as sessões de um usuário",
+        "description": "Este endpoint deleta todas as sessões associadas a um usuário com base no ID do usuário fornecido.",
+        "tags": ["auth"],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "description": "ID do usuário cujas sessões devem ser deletadas",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação bem-sucedida. Todas as sessões do usuário foram deletadas com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/RetornoDto"
+            }
+          },
+          "403": {
+            "description": "Acesso não autorizado"
+          },
+          "404": {
+            "description": "Não encontrado. O usuário especificado não foi encontrado ou não possui sessões associadas."
+          }
+        }
+      }
+    },
+    "/auth/google/url": {
+      "get": {
+        "summary": "Obtém a URL de autenticação do Google",
+        "description": "Este endpoint retorna a URL de autenticação do Google para realizar a autenticação com o Google.",
+        "tags": ["auth"],
+        "responses": {
+          "200": {
+            "description": "Resposta de sucesso com URL de autenticação do Google",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/auth/google": {
+      "post": {
+        "summary": "Autentica um usuário usando o Google",
+        "description": "Este endpoint autentica um usuário usando o Google OAuth.",
+        "tags": ["auth"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Código de autorização do Google",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GoogleAuthDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resposta de sucesso com token de acesso e dados do usuário",
+            "schema": {
+              "$ref": "#/definitions/RetornoTokenDto"
+            }
+          },
+          "400": {
+            "description": "Usuário não encontrado"
+          }
+        }
+      }
+    },
+    "/user": {
+      "post": {
+        "summary": "Cria um novo usuário",
+        "description": "Este endpoint cria um novo usuário com as informações fornecidas.",
+        "tags": ["user"],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Informações do usuário",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserCreationDto"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Resposta de sucesso com o usuário criado",
+            "schema": {
+              "$ref": "#/definitions/RetornoDto"
+            }
+          },
+          "403": {
+            "description": "Acesso não autorizado"
+          },
+          "422": {
+            "description": "Valores inválidos"
+          }
+        }
+      },
+      "put": {
+        "summary": "Edita um usuário existente",
+        "description": "Este endpoint edita um usuário existente com as informações fornecidas.",
+        "tags": ["user"],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "ID do usuário a ser editado",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Novas informações do usuário",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserEditionDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resposta de sucesso com o usuário editado",
+            "schema": {
+              "$ref": "#/definitions/RetornoDto"
+            }
+          },
+          "403": {
+            "description": "Acesso não autorizado"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          },
+          "422": {
+            "description": "Valores inválidos"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Exclui um usuário",
+        "description": "Este endpoint exclui um usuário com base no ID fornecido.",
+        "tags": ["user"],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "ID do usuário a ser excluído",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resposta de sucesso indicando a exclusão do usuário"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          }
+        }
+      },
+      "get": {
+        "summary": "Obtém um usuário pelo ID",
+        "description": "Este endpoint retorna informações de um usuário com base no ID fornecido.",
+        "tags": ["user"],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "ID do usuário",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resposta de sucesso com dados do usuário",
+            "schema": {
+              "$ref": "#/definitions/RetornoDto"
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          }
+        }
+      }
+    },
+    "/user/list": {
+      "get": {
+        "summary": "Obtém todos os usuários",
+        "description": "Este endpoint retorna uma lista de todos os usuários cadastrados.",
+        "tags": ["user"],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resposta de sucesso com a lista de usuários",
+            "schema": {
+              "$ref": "#/definitions/RetornoDto"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "RetornoDto": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "sucesso": {
+          "type": "boolean"
+        },
+        "dados": {
+          "type": "array",
+          "items": {}
+        },
+        "mensagem": {
+          "type": "string"
+        }
+      }
+    },
+    "ApiKeyDto": {
+      "type": "object",
+      "properties": {
+        "api_key": {
+          "type": "string"
+        }
+      },
+      "required": ["api_key"]
+    },
+    "LoginDto": {
+      "type": "object",
+      "properties": {
+        "user_email": {
+          "type": "string"
+        },
+        "user_password": {
+          "type": "string"
+        }
+      },
+      "required": ["user_email", "user_password"]
+    },
+    "TokenDto": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        }
+      },
+      "required": ["token"]
+    },
+    "GoogleAuthDto": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        }
+      },
+      "required": ["code"]
+    },
+    "RetornoTokenDto": {
+      "type": "object",
+      "properties": {
+        "access_token": {
+          "type": "string"
+        },
+        "refresh_token": {
+          "type": "string"
+        },
+        "user": {
+          "type": "object",
+          "properties": {
+            "user_email": {
+              "type": "string"
+            },
+            "user_name": {
+              "type": "string"
+            },
+            "avatar_url": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "UserCreationDto": {
+      "type": "object",
+      "properties": {
+        "user_name": {
+          "type": "string"
+        },
+        "user_email": {
+          "type": "string"
+        },
+        "user_password": {
+          "type": "string"
+        },
+        "user_role": {
+          "$ref": "#/definitions/UserRoleEnum",
+          "description": "Papel do usuário"
+        },
+        "avatar_url": {
+          "type": "string"
+        }
+      },
+      "required": ["user_name", "user_email", "user_password", "user_role"]
+    },
+    "UserEditionDto": {
+      "type": "object",
+      "properties": {
+        "user_name": {
+          "type": "string"
+        },
+        "user_email": {
+          "type": "string"
+        },
+        "user_password": {
+          "type": "string"
+        },
+        "user_role": {
+          "$ref": "#/definitions/UserRoleEnum"
+        },
+        "avatar_url": {
+          "type": "string"
+        }
+      }
+    },
+    "UserRoleEnum": {
+      "type": "integer",
+      "description": "Enum representing user roles",
+      "enum": [0, 1, 2],
+      "default": 0,
+      "enumDescriptions": ["ADMIN", "EMPLOYEE", "USER"]
+    }
+  }
+}

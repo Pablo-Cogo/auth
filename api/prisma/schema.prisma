@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  EMPLOYEE
+  USER
+}
+
+enum StatusJobEnum {
+  SUCCESS
+  FAIL
+}
+
+model User {
+  id            String   @id @default(uuid())
+  user_name     String
+  user_email    String   @unique
+  user_password String
+  user_role     UserRole @default(USER)
+  avatar_url    String?
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now()) @updatedAt
+  session    Session[]
+
+  @@map("users")
+}
+
+model Session {
+  id         String   @id @default(uuid())
+  token      String
+  expires_in Int
+  ip_address String
+  device     String
+  country    String
+  city       String
+  created_at DateTime @default(now())
+  user       User     @relation(fields: [user_id], references: [id])
+  user_id    String
+
+  @@map("sessions")
+}
+
+model Job {
+  id          String        @id @default(uuid())
+  name        String
+  message     String
+  status      StatusJobEnum
+  executed_at DateTime      @default(now())
+
+  @@map("jobs")
+}

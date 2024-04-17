@@ -1,0 +1,1 @@
+{"version":3,"file":"ErroException.js","sourceRoot":"","sources":["../../../src/exceptions/ErroException.ts"],"names":[],"mappings":";;;AAIA,MAAa,aAAc,SAAQ,KAAK;IAGtC,YAAY,QAAgB,EAAE,MAAe;QAC3C,KAAK,CAAC,QAAQ,CAAC,CAAC;QAChB,IAAI,CAAC,MAAM,GAAG,MAAM,aAAN,MAAM,cAAN,MAAM,GAAI,GAAG,CAAC;QAC5B,MAAM,CAAC,cAAc,CAAC,IAAI,EAAE,aAAa,CAAC,SAAS,CAAC,CAAC;IACvD,CAAC;CACF;AARD,sCAQC"}

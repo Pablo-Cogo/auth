@@ -1,0 +1,21 @@
+{
+  "App": {
+    "local": false,
+    "ip": null,
+    "cross-origin": ["http://localhost:3000"],
+    "auth": {
+      "access_token_secret": "92a69207e915d0aed1d3b6c075b846d6a67d6008f6bc2ef2a35f3ebc103cabf5",
+      "refresh_token_secret": "e8d28299960c558ba0e2689d64154e799f282018d579b0b02d066f9fe382d271",
+      "access_token_expires_in": "1m",
+      "refresh_token_expires_in": "1d"
+    },
+    "google": {
+      "clientId": "390627263776-mnm20v2j43q857avt009g3qe6keeurh3.apps.googleusercontent.com",
+      "clientSecret": "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",
+      "redirectUri": "http://localhost:3000"
+    },
+    "adm-api-key": "7f82d1a9e5aadd54dd99ecce51222ac4ade7193d77f3e1b27c9738557d8caef1",
+    "api-key": "70492cacb906a32bdc144da4f785a651d4f22b764869a7ecd985d1614e74f17e",
+    "port": 5001
+  }
+}
