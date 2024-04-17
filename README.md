@@ -13,6 +13,6 @@ npx prisma migrate deploy
 docker build -t pablocogo/login .
 docker push pablocogo/login
 
-# fluxograma
+# Fluxograma
 
 ![Fluxograma](./fluxograma.jpeg)
