@@ -15,6 +15,7 @@ import { RefrershTokenService } from "./services/Auth/Token/refresh-token.servic
 import { JobScheduler } from "./jobs/setup.job";
 import { RemoveInactiveSessionsJob } from "./jobs/jobs/remove-inactive-sessions.job";
 import { SessionService } from "./services/Auth/API/session.service";
+import * as dotenv from "dotenv";
 
 export class SetupServer extends Server {
   constructor(
@@ -35,6 +36,7 @@ export class SetupServer extends Server {
   }
 
   private setupExpress(): void {
+    dotenv.config();
     this.app.use(bodyParser.json());
     this.app.use(
       cors({
